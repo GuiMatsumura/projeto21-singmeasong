@@ -27,8 +27,6 @@ Sing me a song é uma aplicação para recomendação anônima de músicas. Quan
 
 ---
 
-## :rocket: Rotas
-
 ## 🏁 Rodando a aplicação
 
 Primeiro, faça o clone desse repositório na sua maquina:
@@ -37,7 +35,7 @@ Primeiro, faça o clone desse repositório na sua maquina:
 git clone https://github.com/GuiMatsumura/projeto21-singmeasong.git
 ```
 
-Depois, dentro da pasta, rode o seguinte comando para instalar as dependencias.
+Depois, dentro da pasta front-end, rode o seguinte comando para instalar as dependencias.
 
 ```
 npm install
@@ -47,4 +45,30 @@ Finalizado o processo, é só inicializar o servidor
 
 ```
 npm start
+```
+
+Depois, dentro da pasta back-end, rode o seguinte comando para instalar as dependencias.
+
+```
+npm install
+```
+
+Finalizado o processo, é só inicializar o servidor
+
+```
+npm start
+```
+
+Podemos fazer testes no front-end e no back-end.
+
+No front podemos rodar os seguintes comandos
+
+```
+npx cypress open
+```
+
+No back podemos rodar os seguintes comandos
+
+```
+npm test
 ```
