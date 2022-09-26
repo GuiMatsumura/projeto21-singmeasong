@@ -2,13 +2,14 @@ import supertest from 'supertest';
 import app from '../../src/app.js';
 import { faker } from '@faker-js/faker';
 import { prisma } from '../../src/database.js';
+import { recommendationRepository } from '../../src/repositories/recommendationRepository.js';
+
+const recommendation = {
+  name: faker.internet.userName(),
+  youtubeLink: 'https://www.youtube.com/watch?v=fmI_Ndrxy14',
+};
 
 describe('Testing POST /recommendations', () => {
-  const recommendation = {
-    name: faker.internet.userName(),
-    youtubeLink: 'https://www.youtube.com/watch?v=fmI_Ndrxy14',
-  };
-
   beforeEach(async () => {
     await prisma.$executeRaw`TRUNCATE TABLE "recommendations" RESTART IDENTITY`;
   });
@@ -48,5 +49,25 @@ describe('Testing POST /recommendations', () => {
       .send(recommendation.name);
 
     expect(data.status).toBe(422);
+  });
+});
+
+describe('Testing POST /recommendations/:id/upvote', () => {
+  it('Should return 200 the id is correct', async () => {
+    await supertest(app).post('/recommendations').send(recommendation);
+    const { id } = await recommendationRepository.findByName(
+      recommendation.name
+    );
+    const data = await supertest(app).post(`/recommendations/${id}/upvote`);
+
+    expect(data.status).toBe(200);
+  });
+
+  it('Should return 404 the id is incorrect', async () => {
+    const id = 0;
+
+    const data = await supertest(app).post(`/recommendations/${id}/upvote`);
+
+    expect(data.status).toBe(404);
   });
 });
