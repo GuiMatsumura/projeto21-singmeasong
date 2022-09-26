@@ -73,3 +73,15 @@ describe('POST downvote', () => {
     cy.get('#downArrow').click();
   });
 });
+
+describe('GET recommendation by score', () => {
+  it('Should render recommendations by score', () => {
+    cy.visit('http://localhost:3000/top/2');
+  });
+});
+
+describe('GET recommendation random', () => {
+  it('Should render random recommendations', () => {
+    cy.visit('http://localhost:3000/random');
+  });
+});
