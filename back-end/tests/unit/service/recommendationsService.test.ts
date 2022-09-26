@@ -155,4 +155,14 @@ describe('Test recommendation service', () => {
 
     expect(insert).rejects.toEqual(notFoundError(''));
   });
+
+  it('should get recommendations by amount', async () => {
+    jest
+      .spyOn(recommendationRepository, 'getAmountByScore')
+      .mockImplementationOnce((): any => {});
+
+    await recommendationService.getTop(5);
+
+    expect(recommendationRepository.getAmountByScore).toBeCalledTimes(1);
+  });
 });
