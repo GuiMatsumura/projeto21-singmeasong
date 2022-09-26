@@ -64,12 +64,14 @@ describe('Create Recommendation', () => {
 
 describe('POST upvote', () => {
   it('should upvote in a recommendation', () => {
+    cy.visit('http://localhost:3000');
     cy.get('#upArrow').click();
   });
 });
 
 describe('POST downvote', () => {
   it('should downvote in a recommendation', () => {
+    cy.visit('http://localhost:3000');
     cy.get('#downArrow').click();
   });
 });
