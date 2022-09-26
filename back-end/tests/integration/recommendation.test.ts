@@ -91,3 +91,12 @@ describe('Testing POST /recommendations/:id/downvote', () => {
     expect(data.status).toBe(404);
   });
 });
+
+describe('Testing GET /recommendations', () => {
+  it('Should return 200 when get', async () => {
+    const data = await supertest(app).get('/recommendations');
+
+    expect(data.status).toBe(200);
+    expect(data.body).toBeInstanceOf(Array);
+  });
+});
