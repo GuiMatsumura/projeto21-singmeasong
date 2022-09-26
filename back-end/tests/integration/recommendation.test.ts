@@ -71,3 +71,23 @@ describe('Testing POST /recommendations/:id/upvote', () => {
     expect(data.status).toBe(404);
   });
 });
+
+describe('Testing POST /recommendations/:id/downvote', () => {
+  it('Should return 200 the id is correct', async () => {
+    await supertest(app).post('/recommendations').send(recommendation);
+    const { id } = await recommendationRepository.findByName(
+      recommendation.name
+    );
+    const data = await supertest(app).post(`/recommendations/${id}/downvote`);
+
+    expect(data.status).toBe(200);
+  });
+
+  it('Should return 404 the id is incorrect', async () => {
+    const id = 0;
+
+    const data = await supertest(app).post(`/recommendations/${id}/downvote`);
+
+    expect(data.status).toBe(404);
+  });
+});
