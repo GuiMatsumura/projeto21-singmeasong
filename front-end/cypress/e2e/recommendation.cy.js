@@ -31,4 +31,33 @@ describe('Create Recommendation', () => {
       expect(text).to.contains('Error creating recommendation!');
     });
   });
+
+  it('should create a duplicated recommendation', () => {
+    cy.visit('http://localhost:3000');
+    cy.get('input[placeholder="Name"]').type(recommendation.name);
+    cy.get('input[placeholder="https://youtu.be/..."]').type(
+      recommendation.youtubeLink
+    );
+
+    cy.intercept('POST', 'http://localhost:5000/recommendations').as(
+      'createRecommendation'
+    );
+    cy.get('button').click();
+    cy.wait('@createRecommendation');
+
+    cy.get('input[placeholder="Name"]').type(recommendation.name);
+    cy.get('input[placeholder="https://youtu.be/..."]').type(
+      recommendation.youtubeLink
+    );
+
+    cy.intercept('POST', 'http://localhost:5000/recommendations').as(
+      'createRecommendation2'
+    );
+    cy.get('button').click();
+    cy.wait('@createRecommendation2');
+
+    cy.on('window:alert', (text) => {
+      expect(text).to.contains('Error creating recommendation!');
+    });
+  });
 });
