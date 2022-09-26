@@ -72,8 +72,45 @@ describe('Test recommendation service', () => {
       .spyOn(recommendationRepository, 'updateScore')
       .mockImplementationOnce((): any => {});
 
-    const query = recommendationService.upvote(0);
+    const insert = recommendationService.upvote(0);
 
-    expect(query).rejects.toEqual(notFoundError(''));
+    expect(insert).rejects.toEqual(notFoundError(''));
+  });
+
+  it('Should downvote a recommendation', async () => {
+    jest
+      .spyOn(recommendationRepository, 'find')
+      .mockImplementationOnce((): any => {
+        return {
+          id: 1,
+          score: 0,
+          ...recommendation,
+        };
+      });
+
+    jest
+      .spyOn(recommendationRepository, 'updateScore')
+      .mockImplementationOnce((): any => {
+        return {};
+      });
+
+    await recommendationService.downvote(1);
+
+    expect(recommendationRepository.updateScore).toBeCalledTimes(1);
+    expect(recommendationRepository.find).toBeCalledTimes(1);
+  });
+
+  it("Shouldn't downvote a recommendation that doesn't exist", async () => {
+    jest
+      .spyOn(recommendationRepository, 'find')
+      .mockImplementationOnce((): any => {});
+
+    jest
+      .spyOn(recommendationRepository, 'updateScore')
+      .mockImplementationOnce((): any => {});
+
+    const insert = recommendationService.downvote(1);
+
+    expect(insert).rejects.toEqual(notFoundError(''));
   });
 });
