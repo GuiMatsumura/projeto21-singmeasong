@@ -126,3 +126,34 @@ describe('Testing GET /recommendations/:id', () => {
     expect(data.status).toBe(500);
   });
 });
+
+describe('Testing GET /recommendations/random', () => {
+  it('Should return 200 when get', async () => {
+    const data = await supertest(app).get('/recommendations/random');
+
+    expect(data.status).toBe(200);
+    expect(data.body).toBeInstanceOf(Object);
+  });
+});
+
+describe('Testing GET /recommendations/top/:amount', () => {
+  it('Should return 200 when get', async () => {
+    const lastRecommendation = await prisma.recommendation.findMany({
+      orderBy: {
+        id: 'desc',
+      },
+      take: 1,
+    });
+    const { id } = lastRecommendation[0];
+    const data = await supertest(app).get(`/recommendations/top/${id}`);
+
+    expect(data.status).toBe(200);
+    expect(data.body).toBeInstanceOf(Array);
+  });
+
+  it('Should return 500 amount is not valid', async () => {
+    const data = await supertest(app).get(`/recommendations/top/xablau`);
+
+    expect(data.status).toBe(500);
+  });
+});
