@@ -100,3 +100,29 @@ describe('Testing GET /recommendations', () => {
     expect(data.body).toBeInstanceOf(Array);
   });
 });
+
+describe('Testing GET /recommendations/:id', () => {
+  it('Should return 200 the id is correct', async () => {
+    await supertest(app).post('/recommendations').send(recommendation);
+    const { id } = await recommendationRepository.findByName(
+      recommendation.name
+    );
+    const data = await supertest(app).get(`/recommendations/${id}`);
+
+    expect(data.status).toBe(200);
+    expect(data.body).toBeInstanceOf(Object);
+  });
+
+  it('Should return 404 the id not exist', async () => {
+    const id = 0;
+    const data = await supertest(app).get(`/recommendations/${id}`);
+
+    expect(data.status).toBe(404);
+  });
+
+  it('Should return 500 the id is not valid', async () => {
+    const data = await supertest(app).get(`/recommendations/xablau`);
+
+    expect(data.status).toBe(500);
+  });
+});
