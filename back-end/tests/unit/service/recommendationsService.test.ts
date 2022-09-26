@@ -9,6 +9,12 @@ describe('Test recommendation service', () => {
     name: faker.internet.userName(),
     youtubeLink: 'https://www.youtube.com/watch?v=fmI_Ndrxy14',
   };
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
+  });
+
   it('Should create a recommendation', async () => {
     jest
       .spyOn(recommendationRepository, 'findByName')
@@ -110,6 +116,42 @@ describe('Test recommendation service', () => {
       .mockImplementationOnce((): any => {});
 
     const insert = recommendationService.downvote(1);
+
+    expect(insert).rejects.toEqual(notFoundError(''));
+  });
+
+  it('should get the 10 latest recommendations', async () => {
+    jest
+      .spyOn(recommendationRepository, 'findAll')
+      .mockImplementationOnce((): any => {});
+
+    await recommendationService.get();
+
+    expect(recommendationRepository.findAll).toBeCalledTimes(1);
+  });
+
+  it('should get recommendation by id', async () => {
+    jest
+      .spyOn(recommendationRepository, 'find')
+      .mockImplementationOnce((): any => {
+        return {
+          id: 1,
+          score: 0,
+          ...recommendation,
+        };
+      });
+
+    await recommendationService.getById(1);
+
+    expect(recommendationRepository.find).toBeCalledTimes(1);
+  });
+
+  it('should send an error if the id not exist', async () => {
+    jest
+      .spyOn(recommendationRepository, 'find')
+      .mockImplementationOnce((): any => {});
+
+    const insert = recommendationService.getById(0);
 
     expect(insert).rejects.toEqual(notFoundError(''));
   });
