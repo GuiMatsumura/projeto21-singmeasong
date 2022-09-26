@@ -1,13 +1,14 @@
+const recommendation = {
+  name: 'Enemy',
+  youtubeLink: 'https://www.youtube.com/watch?v=IOrbP1OqNsg',
+};
+
 describe('Create Recommendation', () => {
   beforeEach(() => {
     cy.request('POST', 'http://localhost:5000/reset', {});
   });
 
   it('should create a recommendation', () => {
-    const recommendation = {
-      name: 'Enemy',
-      youtubeLink: 'https://www.youtube.com/watch?v=IOrbP1OqNsg',
-    };
     cy.visit('http://localhost:3000');
     cy.get('input[placeholder="Name"]').type(recommendation.name);
     cy.get('input[placeholder="https://youtu.be/..."]').type(
